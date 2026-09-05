@@ -187,7 +187,7 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
 
   return (
     <div className="glass-card user-list-card" style={{ width: '100%', padding: '36px' }}>
-      {/* 2-Column Side-by-Side A4 Print Layout (Visible ONLY when printing) */}
+      {/* A4 Single Large Full-Width Table Print Layout (Visible ONLY when printing) */}
       <div className="print-only-container">
         <div className="print-header">
           <h1 className="print-title">SeyhaGamming — Registered Users Report</h1>
@@ -196,57 +196,24 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
           </div>
         </div>
 
-        <table className="print-table-2col">
+        <table className="print-table-1col">
           <thead>
             <tr>
-              <th className="center" style={{ width: '36px' }}>#</th>
-              <th>Full Name</th>
-              <th>Phone Number</th>
-              <th>Registration Date</th>
-              <th className="col-divider"></th>
-              <th className="center" style={{ width: '36px' }}>#</th>
+              <th className="center" style={{ width: '55px' }}>#</th>
               <th>Full Name</th>
               <th>Phone Number</th>
               <th>Registration Date</th>
             </tr>
           </thead>
           <tbody>
-            {Array.from({ length: Math.ceil(filteredUsers.length / 2) }).map((_, rowIndex) => {
-              const leftIdx = rowIndex * 2;
-              const rightIdx = rowIndex * 2 + 1;
-              const leftUser = filteredUsers[leftIdx];
-              const rightUser = filteredUsers[rightIdx];
-
-              return (
-                <tr key={rowIndex}>
-                  {/* Left Column Item */}
-                  <td className="center">{leftIdx + 1}</td>
-                  <td className="bold">{leftUser.name}</td>
-                  <td>{formatPhoneDisplay(leftUser.phone_number)}</td>
-                  <td className="sm-date">{formatDate(leftUser.created_at)}</td>
-
-                  {/* Divider Column */}
-                  <td className="col-divider"></td>
-
-                  {/* Right Column Item */}
-                  {rightUser ? (
-                    <>
-                      <td className="center">{rightIdx + 1}</td>
-                      <td className="bold">{rightUser.name}</td>
-                      <td>{formatPhoneDisplay(rightUser.phone_number)}</td>
-                      <td className="sm-date">{formatDate(rightUser.created_at)}</td>
-                    </>
-                  ) : (
-                    <>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                      <td></td>
-                    </>
-                  )}
-                </tr>
-              );
-            })}
+            {filteredUsers.map((user, idx) => (
+              <tr key={user.id || idx}>
+                <td className="center">{idx + 1}</td>
+                <td className="bold">{user.name}</td>
+                <td className="phone">{formatPhoneDisplay(user.phone_number)}</td>
+                <td className="date">{formatDate(user.created_at)}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

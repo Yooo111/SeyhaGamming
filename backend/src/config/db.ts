@@ -23,18 +23,21 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
       console.log(`📡 Connecting to MySQL Database via connection URL...`);
       let connUrl = DB_URL.trim();
 
-      // Set pathname to /test (the built-in database on TiDB Cloud) to avoid ER_BAD_DB_ERROR
-      try {
-        const urlObj = new URL(connUrl.startsWith('mysql://') || connUrl.startsWith('mysql2://') ? connUrl : `mysql://${connUrl}`);
-        urlObj.pathname = '/test';
-        connUrl = urlObj.toString();
-      } catch (e) {
-        // Fallback replacement
+      // Remove query parameters
+      if (connUrl.includes('?')) {
+        connUrl = connUrl.split('?')[0];
       }
+
+      // Forcefully replace /sys or missing database path with /test
+      connUrl = connUrl.replace(/\/sys\b/gi, '/test');
+      if (connUrl.endsWith(':4000') || connUrl.endsWith(':4000/')) {
+        connUrl = connUrl.replace(/:4000\/?$/, ':4000/test');
+      }
+
+      console.log(`🔗 Sanitized connection URL target: ${connUrl.replace(/:[^:@]+@/, ':****@')}`);
 
       pool = mysql.createPool({
         uri: connUrl,
-        database: 'test',
         ssl: { rejectUnauthorized: false },
         waitForConnections: true,
         connectionLimit: 10,
@@ -57,7 +60,8 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
 
     // Ensure connection uses 'test' schema
     try {
-      await pool.query('USE test');
+      await pool.query('USE `test`');
+      console.log('✅ Executed: USE `test`');
     } catch (e: any) {
       console.warn('⚠️ USE test note:', e.message);
     }
@@ -73,6 +77,12 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
 };
 
 const createTables = async () => {
+  try {
+    await pool.query('USE `test`');
+  } catch (e: any) {
+    console.warn('⚠️ createTables USE test note:', e.message);
+  }
+
   const createUsersTableSQL = `
     CREATE TABLE IF NOT EXISTS users (
       id BIGINT AUTO_INCREMENT PRIMARY KEY,

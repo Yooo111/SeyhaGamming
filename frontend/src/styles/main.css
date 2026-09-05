@@ -815,7 +815,7 @@ body {
 @media print {
   @page {
     size: A4 portrait;
-    margin: 8mm 10mm 8mm 10mm;
+    margin: 5mm 6mm 5mm 6mm;
   }
 
   /* Force pure 100% black & white, no colored gradients/borders */
@@ -835,7 +835,7 @@ body {
     color: #000000 !important;
     padding: 0 !important;
     margin: 0 !important;
-    font-size: 9pt !important;
+    font-size: 9.5pt !important;
     font-family: Arial, Helvetica, sans-serif !important;
     min-height: auto !important;
     width: 100% !important;
@@ -897,12 +897,12 @@ body {
     justify-content: space-between !important;
     align-items: flex-end !important;
     border-bottom: 2px solid #000000 !important;
-    padding-bottom: 4px !important;
-    margin-bottom: 8px !important;
+    padding-bottom: 5px !important;
+    margin-bottom: 10px !important;
   }
 
   .print-title {
-    font-size: 14pt !important;
+    font-size: 15pt !important;
     font-weight: bold !important;
     color: #000000 !important;
     margin: 0 !important;
@@ -910,7 +910,7 @@ body {
   }
 
   .print-meta {
-    font-size: 8.5pt !important;
+    font-size: 9.5pt !important;
     color: #000000 !important;
     font-weight: 600 !important;
   }
@@ -919,13 +919,13 @@ body {
   .print-table-2col {
     width: 100% !important;
     border-collapse: collapse !important;
-    font-size: 8pt !important;
+    font-size: 9pt !important;
   }
 
   .print-table-2col th,
   .print-table-2col td {
     border: 1px solid #000000 !important;
-    padding: 4px 6px !important;
+    padding: 6px 8px !important;
     color: #000000 !important;
     background-color: #ffffff !important;
     vertical-align: middle !important;
@@ -935,7 +935,7 @@ body {
     background-color: #f0f0f0 !important;
     font-weight: bold !important;
     text-transform: uppercase !important;
-    font-size: 7.5pt !important;
+    font-size: 8.5pt !important;
     text-align: left !important;
     letter-spacing: 0.3px !important;
   }
@@ -950,7 +950,7 @@ body {
   }
 
   .print-table-2col td.sm-date {
-    font-size: 7.5pt !important;
+    font-size: 8.5pt !important;
     white-space: nowrap !important;
   }
 
@@ -969,6 +969,7 @@ body {
     page-break-inside: avoid !important;
   }
 }
+
 
 
 

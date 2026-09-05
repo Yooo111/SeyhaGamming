@@ -23,9 +23,16 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
       console.log(`📡 Connecting to MySQL Database via connection URL...`);
       let connUrl = DB_URL.trim();
 
-      // If URL points to system schema /sys or has no path, override to /test
-      if (connUrl.includes('/sys')) {
-        connUrl = connUrl.replace('/sys', '/test');
+      // Replace any system schemas (/sys, /information_schema, /mysql) or empty path with /test
+      try {
+        const urlObj = new URL(connUrl.startsWith('mysql://') || connUrl.startsWith('mysql2://') ? connUrl : `mysql://${connUrl}`);
+        const currentPath = (urlObj.pathname || '').toLowerCase();
+        if (!currentPath || currentPath === '/' || currentPath === '/sys' || currentPath === '/information_schema' || currentPath === '/mysql') {
+          urlObj.pathname = '/test';
+          connUrl = urlObj.toString();
+        }
+      } catch (e) {
+        connUrl = connUrl.replace(/\/sys|\/information_schema|\/mysql/gi, '/test');
       }
 
       pool = mysql.createPool({

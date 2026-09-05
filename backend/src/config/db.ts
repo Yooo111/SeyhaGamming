@@ -16,10 +16,18 @@ const USE_SSL = process.env.DB_SSL === 'true' || (process.env.NODE_ENV === 'prod
 let pool: mysql.Pool;
 
 export const initDatabase = async (): Promise<mysql.Pool> => {
+  if (pool) return pool;
+
   try {
     if (DB_URL) {
       console.log(`📡 Connecting to MySQL Database via connection URL...`);
       let connUrl = DB_URL.trim();
+
+      // Remove query parameters like ?ssl=... that mysql2 URI parser rejects
+      if (connUrl.includes('?')) {
+        connUrl = connUrl.split('?')[0];
+      }
+
       // Ensure DB_URL has default database if not specified
       if (connUrl.startsWith('mysql://') || connUrl.startsWith('mysql2://')) {
         try {
@@ -32,6 +40,7 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
           // Keep connUrl as is
         }
       }
+
       pool = mysql.createPool({
         uri: connUrl,
         ssl: { rejectUnauthorized: false },
@@ -100,19 +109,27 @@ const createTables = async () => {
     );
   `;
 
-  await pool.query(createUsersTableSQL);
-  console.log('✅ Table "users" verified/created (BIGINT ID, Phone Number set to UNIQUE).');
+  try {
+    await pool.query(createUsersTableSQL);
+    console.log('✅ Table "users" verified/created (BIGINT ID, Phone Number set to UNIQUE).');
+  } catch (e: any) {
+    console.warn('⚠️ Users table verification note:', e.message);
+  }
 
-  // Upgrade existing table columns to maximum capacity
+  // Upgrade existing table columns if needed
   try {
     await pool.query('ALTER TABLE users MODIFY COLUMN id BIGINT AUTO_INCREMENT, MODIFY COLUMN name VARCHAR(255), MODIFY COLUMN phone_number VARCHAR(50)');
     await pool.query('ALTER TABLE admin_users MODIFY COLUMN id BIGINT AUTO_INCREMENT, MODIFY COLUMN username VARCHAR(100)');
   } catch (e) {
-    // Ignore alter errors if columns are already upgraded
+    // Ignore alter errors if columns are already upgraded or disallowed
   }
 
-  await pool.query(createAdminTableSQL);
-  console.log('✅ Table "admin_users" verified/created.');
+  try {
+    await pool.query(createAdminTableSQL);
+    console.log('✅ Table "admin_users" verified/created.');
+  } catch (e: any) {
+    console.warn('⚠️ Admin table verification note:', e.message);
+  }
 
   // Drop old OTP table if it exists
   try {
@@ -122,14 +139,18 @@ const createTables = async () => {
   }
 
   // Seed or update default admin account (SeyhaAdmin / Seyha@123) with Bcrypt hashing
-  const hashedPassword = await bcrypt.hash('Seyha@123', 10);
-  const [admins]: any = await pool.query('SELECT id FROM admin_users LIMIT 1');
-  if (admins.length === 0) {
-    await pool.query('INSERT INTO admin_users (id, username, password) VALUES (1, ?, ?)', ['SeyhaAdmin', hashedPassword]);
-    console.log('🔑 Default Admin created with Bcrypt hashing: Username="SeyhaAdmin"');
-  } else {
-    await pool.query('UPDATE admin_users SET username = ?, password = ? WHERE id = 1', ['SeyhaAdmin', hashedPassword]);
-    console.log('🔑 Admin account synced with Bcrypt hashing: Username="SeyhaAdmin"');
+  try {
+    const hashedPassword = await bcrypt.hash('Seyha@123', 10);
+    const [admins]: any = await pool.query('SELECT id FROM admin_users LIMIT 1');
+    if (admins.length === 0) {
+      await pool.query('INSERT INTO admin_users (id, username, password) VALUES (1, ?, ?)', ['SeyhaAdmin', hashedPassword]);
+      console.log('🔑 Default Admin created with Bcrypt hashing: Username="SeyhaAdmin"');
+    } else {
+      await pool.query('UPDATE admin_users SET username = ?, password = ? WHERE id = 1', ['SeyhaAdmin', hashedPassword]);
+      console.log('🔑 Admin account synced with Bcrypt hashing: Username="SeyhaAdmin"');
+    }
+  } catch (e: any) {
+    console.error('⚠️ Admin seeding warning:', e.message);
   }
 };
 

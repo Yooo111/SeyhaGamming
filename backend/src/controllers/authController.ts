@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import bcrypt from 'bcryptjs';
-import { getPool } from '../config/db';
+import { initDatabase } from '../config/db';
 import { generateAdminToken } from '../middleware/authMiddleware';
 
 /**
@@ -37,7 +37,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     }
 
     const formattedPhone = cleanPhoneNumber(phone_number);
-    const pool = getPool();
+    const pool = await initDatabase();
 
     // 1. Check duplicate phone number in MySQL users table (ignoring spaces)
     const [existingUsers] = await pool.query<RowDataPacket[]>(
@@ -95,7 +95,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
  */
 export const getRegisteredUsers = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const pool = getPool();
+    const pool = await initDatabase();
     const [users] = await pool.query<RowDataPacket[]>(
       'SELECT id, name, phone_number, created_at FROM users ORDER BY created_at DESC'
     );
@@ -130,7 +130,7 @@ export const adminLogin = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    const pool = getPool();
+    const pool = await initDatabase();
     const [admins] = await pool.query<RowDataPacket[]>(
       'SELECT id, username, password FROM admin_users WHERE username = ?',
       [username.trim()]
@@ -201,7 +201,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     }
 
     const formattedPhone = cleanPhoneNumber(phone_number);
-    const pool = getPool();
+    const pool = await initDatabase();
 
     // Check duplicate phone number for another user (ignoring spaces)
     const [existing] = await pool.query<RowDataPacket[]>(
@@ -242,7 +242,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 export const deleteUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { id } = req.params;
-    const pool = getPool();
+    const pool = await initDatabase();
 
     const [result] = await pool.query<ResultSetHeader>(
       'DELETE FROM users WHERE id = ?',

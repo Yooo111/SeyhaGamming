@@ -234,16 +234,16 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {/* Search Box */}
-          <div className="input-wrapper" style={{ width: '380px' }}>
+          <div className="input-wrapper" style={{ width: '340px' }}>
             <span className="input-icon">
               <Search size={15} />
             </span>
             <input
               type="text"
               className="form-input"
-              style={{ padding: '8px 12px 8px 36px', fontSize: '0.85rem' }}
+              style={{ padding: '9px 14px 9px 38px', fontSize: '0.88rem' }}
               placeholder="Search user or phone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -255,28 +255,33 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
             onClick={fetchUsers}
             disabled={loading}
             title="Refresh database records"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
+            style={{ display: 'inline-flex', width: 'auto', alignItems: 'center', gap: '6px', padding: '9px 16px', fontSize: '0.88rem', whiteSpace: 'nowrap' }}
           >
             <RefreshCw size={14} className={loading ? 'spinner' : ''} /> Refresh
           </button>
 
           <button
-            className="btn-primary"
             onClick={() => window.print()}
             style={{
-              display: 'flex',
+              display: 'inline-flex',
+              width: 'auto',
               alignItems: 'center',
+              justifyContent: 'center',
               gap: '6px',
-              padding: '8px 12px',
-              fontSize: '0.85rem',
-              whiteSpace: 'nowrap',
+              padding: '9px 16px',
+              fontSize: '0.88rem',
+              fontWeight: 600,
+              color: '#ffffff',
+              borderRadius: 'var(--radius-md)',
               background: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
               border: 'none',
-              boxShadow: '0 4px 12px rgba(6, 182, 212, 0.3)'
+              boxShadow: '0 4px 12px rgba(6, 182, 212, 0.3)',
+              cursor: 'pointer',
+              whiteSpace: 'nowrap'
             }}
             title="Print or Export A4 PDF Document"
           >
-            <Printer size={14} /> Print
+            <Printer size={14} /> Print PDF
           </button>
         </div>
       </div>

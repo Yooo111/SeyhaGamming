@@ -234,9 +234,9 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
           </p>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {/* Search Box */}
-          <div className="input-wrapper" style={{ width: '250px' }}>
+          <div className="input-wrapper" style={{ width: '320px' }}>
             <span className="input-icon">
               <Search size={16} />
             </span>
@@ -255,27 +255,28 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
             onClick={fetchUsers}
             disabled={loading}
             title="Refresh database records"
-            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '0.9rem' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 14px', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
           >
-            <RefreshCw size={15} className={loading ? 'spinner' : ''} /> Refresh
+            <RefreshCw size={14} className={loading ? 'spinner' : ''} /> Refresh
           </button>
 
           <button
             className="btn-primary"
             onClick={() => window.print()}
             style={{
-              display: 'flex',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '8px',
-              padding: '10px 18px',
-              fontSize: '0.9rem',
+              gap: '6px',
+              padding: '9px 14px',
+              fontSize: '0.85rem',
+              whiteSpace: 'nowrap',
               background: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
               border: 'none',
-              boxShadow: '0 4px 12px rgba(6, 182, 212, 0.35)'
+              boxShadow: '0 4px 12px rgba(6, 182, 212, 0.25)'
             }}
             title="Print or Export A4 PDF Document"
           >
-            <Printer size={15} /> Print PDF
+            <Printer size={14} /> Print PDF
           </button>
         </div>
       </div>

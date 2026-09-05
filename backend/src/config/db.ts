@@ -21,10 +21,16 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
   try {
     if (DB_URL) {
       console.log(`📡 Connecting to MySQL Database via connection URL...`);
-      const connUrl = DB_URL.trim();
+      let connUrl = DB_URL.trim();
+
+      // If URL points to system schema /sys or has no path, override to /test
+      if (connUrl.includes('/sys')) {
+        connUrl = connUrl.replace('/sys', '/test');
+      }
 
       pool = mysql.createPool({
         uri: connUrl,
+        database: 'test',
         ssl: { rejectUnauthorized: false },
         waitForConnections: true,
         connectionLimit: 10,

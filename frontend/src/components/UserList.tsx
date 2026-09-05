@@ -208,7 +208,7 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
           <tbody>
             {filteredUsers.map((user, idx) => (
               <tr key={user.id || idx}>
-                <td className="center">{idx + 1}</td>
+                <td className="center">{filteredUsers.length - idx}</td>
                 <td className="bold">{user.name}</td>
                 <td className="phone">{formatPhoneDisplay(user.phone_number)}</td>
                 <td className="date">{formatDate(user.created_at)}</td>
@@ -351,7 +351,7 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
                 {filteredUsers.map((user, idx) => (
                   <tr key={user.id || idx}>
                     <td style={{ color: 'var(--text-muted)', fontWeight: 600, padding: '18px 20px', fontSize: '0.95rem' }}>
-                      {idx + 1}
+                      {filteredUsers.length - idx}
                     </td>
                     <td style={{ fontWeight: 700, color: 'var(--text-main)', padding: '18px 20px', fontSize: '1rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

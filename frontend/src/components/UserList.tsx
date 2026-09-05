@@ -199,12 +199,12 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
         <table className="print-table-2col">
           <thead>
             <tr>
-              <th className="center" style={{ width: '28px' }}>#</th>
+              <th className="center" style={{ width: '36px' }}>#</th>
               <th>Full Name</th>
               <th>Phone Number</th>
               <th>Registration Date</th>
               <th className="col-divider"></th>
-              <th className="center" style={{ width: '28px' }}>#</th>
+              <th className="center" style={{ width: '36px' }}>#</th>
               <th>Full Name</th>
               <th>Phone Number</th>
               <th>Registration Date</th>

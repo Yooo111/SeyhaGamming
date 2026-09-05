@@ -84,8 +84,8 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     res.status(500).json({
       success: false,
-      message: 'Server error completing registration. Please try again.',
-      error: error.message,
+      message: error?.message ? `Registration error: ${error.message}` : 'Server error completing registration. Please try again.',
+      error: error?.message || String(error),
     });
   }
 };

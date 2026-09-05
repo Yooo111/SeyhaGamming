@@ -19,9 +19,22 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
   try {
     if (DB_URL) {
       console.log(`📡 Connecting to MySQL Database via connection URL...`);
+      let connUrl = DB_URL.trim();
+      // Ensure DB_URL has default database if not specified
+      if (connUrl.startsWith('mysql://') || connUrl.startsWith('mysql2://')) {
+        try {
+          const urlObj = new URL(connUrl);
+          if (!urlObj.pathname || urlObj.pathname === '/') {
+            urlObj.pathname = '/test';
+            connUrl = urlObj.toString();
+          }
+        } catch (e) {
+          // Keep connUrl as is
+        }
+      }
       pool = mysql.createPool({
-        uri: DB_URL,
-        ssl: USE_SSL ? { rejectUnauthorized: false } : undefined,
+        uri: connUrl,
+        ssl: { rejectUnauthorized: false },
         waitForConnections: true,
         connectionLimit: 10,
         queueLimit: 0,

@@ -23,20 +23,21 @@ app.use('/api', authRoutes);
 
 // Start Server and Initialize Database
 const startServer = async () => {
+  app.listen(PORT, () => {
+    console.log(`\n🚀 Backend Server successfully running at port ${PORT}`);
+    console.log(`📡 API Routes available:`);
+    console.log(`   - POST /api/register`);
+    console.log(`   - GET  /api/users\n`);
+  });
+
   try {
     console.log('🔄 Initializing MySQL Database connection...');
     await initDatabase();
-
-    app.listen(PORT, () => {
-      console.log(`\n🚀 Backend Server successfully running at: http://localhost:${PORT}`);
-      console.log(`📡 API Routes available:`);
-      console.log(`   - POST http://localhost:${PORT}/api/register`);
-      console.log(`   - GET  http://localhost:${PORT}/api/users\n`);
-    });
+    console.log('✅ Database initialized successfully!');
   } catch (error) {
-    console.error('❌ Database connection failed. Please ensure MySQL database server is running and accessible!', error);
-    process.exit(1);
+    console.error('⚠️ Database connection error during startup:', error);
   }
 };
 
 startServer();
+

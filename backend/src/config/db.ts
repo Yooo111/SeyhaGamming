@@ -63,7 +63,21 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
       });
     }
 
-    // 3. Create required tables if missing
+    // 3. Ensure connection uses an application database (register_db or test) instead of system db (sys)
+    try {
+      await pool.query('CREATE DATABASE IF NOT EXISTS register_db');
+      await pool.query('USE register_db');
+      console.log('✅ Database context set to "register_db"');
+    } catch (e: any) {
+      try {
+        await pool.query('USE test');
+        console.log('✅ Database context set to "test"');
+      } catch (err: any) {
+        console.warn('⚠️ Could not set database context:', err.message);
+      }
+    }
+
+    // 4. Create required tables if missing
     await createTables();
 
     return pool;

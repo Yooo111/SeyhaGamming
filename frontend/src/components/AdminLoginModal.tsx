@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Lock, User, KeyRound, X, AlertCircle, RefreshCw } from 'lucide-react';
 import { AdminLoginResponse } from '../types';
+import { API_BASE_URL } from '../config';
 
 interface AdminLoginModalProps {
   isOpen: boolean;
@@ -32,7 +33,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({
     setLoading(true);
 
     try {
-      const response = await fetch('/api/admin/login', {
+      const response = await fetch(`${API_BASE_URL}/api/admin/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: username.trim(), password }),

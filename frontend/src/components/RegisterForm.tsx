@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { User, Phone, ArrowRight, RefreshCw, CheckCircle2, AlertCircle } from 'lucide-react';
 import { RegisterResponse } from '../types';
 
+import { API_BASE_URL } from '../config';
+
 interface RegisterFormProps {
   onUserRegistered: () => void;
 }
@@ -37,7 +39,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onUserRegistered }) 
     setLoading(true);
 
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch(`${API_BASE_URL}/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

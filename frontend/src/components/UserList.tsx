@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Database, RefreshCw, Phone, User as UserIcon, Calendar, Search, Users, ShieldCheck, Clock, Edit2, Trash2, X, Check, AlertCircle } from 'lucide-react';
 import { User, UsersResponse } from '../types';
+import { API_BASE_URL } from '../config';
 
 interface UserListProps {
   refreshTrigger: number;
@@ -28,7 +29,7 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch('/api/users');
+      const response = await fetch(`${API_BASE_URL}/api/users`);
       const data: UsersResponse = await response.json();
       if (response.ok && data.success && data.users) {
         setUsers(data.users);
@@ -114,7 +115,7 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
     setEditLoading(true);
 
     try {
-      const response = await fetch(`/api/users/${editingUser.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/users/${editingUser.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -157,7 +158,7 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
     setIsDeleting(true);
 
     try {
-      const response = await fetch(`/api/users/${deletingUser.id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/users/${deletingUser.id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${adminToken || ''}`,

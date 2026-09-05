@@ -328,7 +328,7 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
                 {filteredUsers.map((user, idx) => (
                   <tr key={user.id || idx}>
                     <td style={{ color: 'var(--text-muted)', fontWeight: 600, padding: '18px 20px', fontSize: '0.95rem' }}>
-                      {filteredUsers.length - idx}
+                      {idx + 1}
                     </td>
                     <td style={{ fontWeight: 700, color: 'var(--text-main)', padding: '18px 20px', fontSize: '1rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

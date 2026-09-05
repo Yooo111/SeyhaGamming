@@ -806,7 +806,7 @@ body {
 }
 
 /* ==========================================================================
-   A4 PDF Print Formatting & Layout Styles
+   A4 PDF Print Formatting & Layout Styles (Pure Black & White)
    ========================================================================== */
 .print-only-header {
   display: none;
@@ -816,6 +816,13 @@ body {
   @page {
     size: A4 portrait;
     margin: 12mm 15mm 12mm 15mm;
+  }
+
+  * {
+    color-adjust: exact !important;
+    -webkit-print-color-adjust: exact !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
 
   html, body {
@@ -829,7 +836,7 @@ body {
     min-height: auto !important;
   }
 
-  /* Hide UI controls, navigation, and modal backdrops */
+  /* Hide UI controls, navigation, headers, and modal backdrops */
   .top-navbar,
   .btn-admin-login,
   .btn-admin-logout,
@@ -842,7 +849,8 @@ body {
   .btn-action-delete,
   .admin-stats-grid,
   .mobile-only-cards,
-  .card-top-bar > div:last-child {
+  .card-header,
+  .card-top-bar {
     display: none !important;
   }
 
@@ -867,14 +875,18 @@ body {
     -webkit-backdrop-filter: none !important;
   }
 
-  .card-top-bar {
-    display: none !important;
-  }
-
-  /* Show A4 Print Document Header */
+  /* Show Clean Black & White A4 Print Document Header */
   .print-only-header {
     display: block !important;
     margin-bottom: 20px !important;
+    color: #000000 !important;
+  }
+
+  .print-only-header h1,
+  .print-only-header p,
+  .print-only-header div,
+  .print-only-header strong {
+    color: #000000 !important;
   }
 
   .user-table-container {
@@ -894,18 +906,25 @@ body {
 
   .desktop-only-table th,
   .desktop-only-table td {
-    border: 1px solid #d1d5db !important;
-    color: #111827 !important;
+    border: 1px solid #000000 !important;
+    color: #000000 !important;
     padding: 10px 14px !important;
     text-align: left !important;
+    background-color: #ffffff !important;
   }
 
   .desktop-only-table th {
-    background-color: #f3f4f6 !important;
+    background-color: #f0f0f0 !important;
     font-weight: 700 !important;
     text-transform: uppercase !important;
-    font-size: 8.5pt !important;
+    font-size: 9pt !important;
     letter-spacing: 0.5px !important;
+    color: #000000 !important;
+  }
+
+  /* Hide decorative icons inside table cells for clean printing */
+  .desktop-only-table svg {
+    display: none !important;
   }
 
   /* Hide Actions column in print view */
@@ -921,7 +940,7 @@ body {
   .badge-phone-large {
     background: none !important;
     border: none !important;
-    color: #111827 !important;
+    color: #000000 !important;
     padding: 0 !important;
     font-weight: 600 !important;
     font-size: 10pt !important;
@@ -931,5 +950,6 @@ body {
     page-break-inside: avoid !important;
   }
 }
+
 
 

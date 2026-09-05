@@ -28,16 +28,32 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
         connUrl = connUrl.split('?')[0];
       }
 
-      // Ensure DB_URL has default database if not specified
+      // Parse connection URL to extract credentials and ensure database exists
       if (connUrl.startsWith('mysql://') || connUrl.startsWith('mysql2://')) {
         try {
           const urlObj = new URL(connUrl);
-          if (!urlObj.pathname || urlObj.pathname === '/') {
-            urlObj.pathname = '/test';
-            connUrl = urlObj.toString();
+          const targetDb = (urlObj.pathname && urlObj.pathname !== '/') ? urlObj.pathname.replace('/', '') : 'test';
+
+          // Try ensuring database exists on cloud MySQL server
+          try {
+            const rootConn = await mysql.createConnection({
+              host: urlObj.hostname,
+              port: parseInt(urlObj.port || '3306', 10),
+              user: decodeURIComponent(urlObj.username),
+              password: decodeURIComponent(urlObj.password),
+              ssl: { rejectUnauthorized: false },
+            });
+            await rootConn.query(`CREATE DATABASE IF NOT EXISTS \`${targetDb}\`;`);
+            await rootConn.end();
+            console.log(`✅ Cloud Database "${targetDb}" verified/created.`);
+          } catch (err: any) {
+            console.warn(`⚠️ Root database creation skipped/not permitted (${err.message}). Connecting directly to pool...`);
           }
-        } catch (e) {
-          // Keep connUrl as is
+
+          urlObj.pathname = `/${targetDb}`;
+          connUrl = urlObj.toString();
+        } catch (e: any) {
+          console.warn('⚠️ URL parsing note:', e.message);
         }
       }
 

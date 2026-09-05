@@ -178,8 +178,8 @@ export const adminLogin = async (req: Request, res: Response): Promise<void> => 
     console.error('Error during admin login:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error during admin login.',
-      error: error.message,
+      message: error?.message ? `Admin login error: ${error.message}` : 'Server error during admin login.',
+      error: error?.message || String(error),
     });
   }
 };

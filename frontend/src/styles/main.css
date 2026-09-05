@@ -805,4 +805,131 @@ body {
   }
 }
 
+/* ==========================================================================
+   A4 PDF Print Formatting & Layout Styles
+   ========================================================================== */
+.print-only-header {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm 12mm 15mm;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 10pt !important;
+    font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
+    min-height: auto !important;
+  }
+
+  /* Hide UI controls, navigation, and modal backdrops */
+  .top-navbar,
+  .btn-admin-login,
+  .btn-admin-logout,
+  .modal-overlay,
+  .alert-banner,
+  .input-wrapper,
+  .btn-secondary,
+  .btn-primary,
+  .btn-action-edit,
+  .btn-action-delete,
+  .admin-stats-grid,
+  .mobile-only-cards,
+  .card-top-bar > div:last-child {
+    display: none !important;
+  }
+
+  .page-wrapper {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .glass-card {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .card-top-bar {
+    display: none !important;
+  }
+
+  /* Show A4 Print Document Header */
+  .print-only-header {
+    display: block !important;
+    margin-bottom: 20px !important;
+  }
+
+  .user-table-container {
+    max-height: none !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Always use full-width table for A4 page print */
+  .desktop-only-table {
+    display: table !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 10pt !important;
+  }
+
+  .desktop-only-table th,
+  .desktop-only-table td {
+    border: 1px solid #d1d5db !important;
+    color: #111827 !important;
+    padding: 10px 14px !important;
+    text-align: left !important;
+  }
+
+  .desktop-only-table th {
+    background-color: #f3f4f6 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 8.5pt !important;
+    letter-spacing: 0.5px !important;
+  }
+
+  /* Hide Actions column in print view */
+  .desktop-only-table th:last-child,
+  .desktop-only-table td:last-child {
+    display: none !important;
+  }
+
+  .user-avatar-large {
+    display: none !important;
+  }
+
+  .badge-phone-large {
+    background: none !important;
+    border: none !important;
+    color: #111827 !important;
+    padding: 0 !important;
+    font-weight: 600 !important;
+    font-size: 10pt !important;
+  }
+
+  .desktop-only-table tr {
+    page-break-inside: avoid !important;
+  }
+}
+
 

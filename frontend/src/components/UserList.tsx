@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Database, RefreshCw, Phone, User as UserIcon, Calendar, Search, Users, ShieldCheck, Clock, Edit2, Trash2, X, Check, AlertCircle } from 'lucide-react';
+import { Database, RefreshCw, Phone, User as UserIcon, Calendar, Search, Users, ShieldCheck, Clock, Edit2, Trash2, X, Check, AlertCircle, Printer } from 'lucide-react';
 import { User, UsersResponse } from '../types';
 import { API_BASE_URL } from '../config';
 
@@ -187,6 +187,20 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
 
   return (
     <div className="glass-card user-list-card" style={{ width: '100%', padding: '36px' }}>
+      {/* Printable A4 PDF Header (Visible only when printing) */}
+      <div className="print-only-header">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #111827', paddingBottom: '14px', marginBottom: '18px' }}>
+          <div>
+            <h1 style={{ fontSize: '22pt', color: '#111827', margin: 0, fontWeight: 800 }}>SeyhaGamming</h1>
+            <p style={{ fontSize: '11pt', color: '#4b5563', margin: '4px 0 0 0' }}>Registered Accounts & Phone Database Report</p>
+          </div>
+          <div style={{ textAlign: 'right', fontSize: '9.5pt', color: '#4b5563', lineHeight: '1.4' }}>
+            <div><strong>Generated:</strong> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
+            <div><strong>Total Users:</strong> {users.length}</div>
+          </div>
+        </div>
+      </div>
+
       {/* Header Bar */}
       <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', marginBottom: '24px' }}>
         <div>
@@ -227,6 +241,24 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
             style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px', fontSize: '0.9rem' }}
           >
             <RefreshCw size={15} className={loading ? 'spinner' : ''} /> Refresh
+          </button>
+
+          <button
+            className="btn-primary"
+            onClick={() => window.print()}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '10px 18px',
+              fontSize: '0.9rem',
+              background: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
+              border: 'none',
+              boxShadow: '0 4px 12px rgba(6, 182, 212, 0.35)'
+            }}
+            title="Print or Export A4 PDF Document"
+          >
+            <Printer size={15} /> Print PDF
           </button>
         </div>
       </div>

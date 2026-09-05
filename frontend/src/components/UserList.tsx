@@ -187,18 +187,68 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
 
   return (
     <div className="glass-card user-list-card" style={{ width: '100%', padding: '36px' }}>
-      {/* Printable A4 PDF Header (Visible only when printing) */}
-      <div className="print-only-header">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #111827', paddingBottom: '14px', marginBottom: '18px' }}>
-          <div>
-            <h1 style={{ fontSize: '22pt', color: '#111827', margin: 0, fontWeight: 800 }}>SeyhaGamming</h1>
-            <p style={{ fontSize: '11pt', color: '#4b5563', margin: '4px 0 0 0' }}>Registered Accounts & Phone Database Report</p>
-          </div>
-          <div style={{ textAlign: 'right', fontSize: '9.5pt', color: '#4b5563', lineHeight: '1.4' }}>
-            <div><strong>Generated:</strong> {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</div>
-            <div><strong>Total Users:</strong> {users.length}</div>
+      {/* 2-Column Side-by-Side A4 Print Layout (Visible ONLY when printing) */}
+      <div className="print-only-container">
+        <div className="print-header">
+          <h1 className="print-title">SeyhaGamming — Registered Users Report</h1>
+          <div className="print-meta">
+            Total Records: {filteredUsers.length} &nbsp;|&nbsp; Date: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
           </div>
         </div>
+
+        <table className="print-table-2col">
+          <thead>
+            <tr>
+              <th className="center" style={{ width: '28px' }}>#</th>
+              <th>Full Name</th>
+              <th>Phone Number</th>
+              <th>Registration Date</th>
+              <th className="col-divider"></th>
+              <th className="center" style={{ width: '28px' }}>#</th>
+              <th>Full Name</th>
+              <th>Phone Number</th>
+              <th>Registration Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.from({ length: Math.ceil(filteredUsers.length / 2) }).map((_, rowIndex) => {
+              const leftIdx = rowIndex * 2;
+              const rightIdx = rowIndex * 2 + 1;
+              const leftUser = filteredUsers[leftIdx];
+              const rightUser = filteredUsers[rightIdx];
+
+              return (
+                <tr key={rowIndex}>
+                  {/* Left Column Item */}
+                  <td className="center">{leftIdx + 1}</td>
+                  <td className="bold">{leftUser.name}</td>
+                  <td>{formatPhoneDisplay(leftUser.phone_number)}</td>
+                  <td className="sm-date">{formatDate(leftUser.created_at)}</td>
+
+                  {/* Divider Column */}
+                  <td className="col-divider"></td>
+
+                  {/* Right Column Item */}
+                  {rightUser ? (
+                    <>
+                      <td className="center">{rightIdx + 1}</td>
+                      <td className="bold">{rightUser.name}</td>
+                      <td>{formatPhoneDisplay(rightUser.phone_number)}</td>
+                      <td className="sm-date">{formatDate(rightUser.created_at)}</td>
+                    </>
+                  ) : (
+                    <>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                      <td></td>
+                    </>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
 
       {/* Header Bar */}

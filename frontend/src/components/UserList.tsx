@@ -236,14 +236,14 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {/* Search Box */}
-          <div className="input-wrapper" style={{ width: '260px' }}>
+          <div className="input-wrapper" style={{ width: '380px' }}>
             <span className="input-icon">
               <Search size={15} />
             </span>
             <input
               type="text"
               className="form-input"
-              style={{ padding: '9px 12px 9px 36px', fontSize: '0.85rem' }}
+              style={{ padding: '8px 12px 8px 36px', fontSize: '0.85rem' }}
               placeholder="Search user or phone..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -255,7 +255,7 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
             onClick={fetchUsers}
             disabled={loading}
             title="Refresh database records"
-            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '9px 14px', fontSize: '0.85rem' }}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', fontSize: '0.85rem', whiteSpace: 'nowrap' }}
           >
             <RefreshCw size={14} className={loading ? 'spinner' : ''} /> Refresh
           </button>
@@ -267,15 +267,16 @@ export const UserList: React.FC<UserListProps> = ({ refreshTrigger, adminToken }
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
-              padding: '9px 12px',
+              padding: '8px 12px',
               fontSize: '0.85rem',
+              whiteSpace: 'nowrap',
               background: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%)',
               border: 'none',
               boxShadow: '0 4px 12px rgba(6, 182, 212, 0.3)'
             }}
             title="Print or Export A4 PDF Document"
           >
-            <Printer size={14} /> Print PDF
+            <Printer size={14} /> Print
           </button>
         </div>
       </div>

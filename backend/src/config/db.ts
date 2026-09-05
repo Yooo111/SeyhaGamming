@@ -15,29 +15,30 @@ const USE_SSL = process.env.DB_SSL === 'true' || (process.env.NODE_ENV === 'prod
 
 let pool: mysql.Pool;
 
+const PROD_DB_NAME = 'seyhagamming_db';
+
 export const initDatabase = async (): Promise<mysql.Pool> => {
   if (pool) return pool;
 
   try {
     if (DB_URL) {
-      console.log(`📡 Connecting to MySQL Database via connection URL...`);
+      console.log(`📡 Connecting to Production MySQL Database via connection URL...`);
       let connUrl = DB_URL.trim();
 
-      // Replace any system schemas (/sys, /information_schema, /mysql) or empty path with /test
+      // Replace system schemas (/sys, /information_schema, /mysql) with /seyhagamming_db
       try {
         const urlObj = new URL(connUrl.startsWith('mysql://') || connUrl.startsWith('mysql2://') ? connUrl : `mysql://${connUrl}`);
         const currentPath = (urlObj.pathname || '').toLowerCase();
         if (!currentPath || currentPath === '/' || currentPath === '/sys' || currentPath === '/information_schema' || currentPath === '/mysql') {
-          urlObj.pathname = '/test';
+          urlObj.pathname = `/${PROD_DB_NAME}`;
           connUrl = urlObj.toString();
         }
       } catch (e) {
-        connUrl = connUrl.replace(/\/sys|\/information_schema|\/mysql/gi, '/test');
+        connUrl = connUrl.replace(/\/sys|\/information_schema|\/mysql/gi, `/${PROD_DB_NAME}`);
       }
 
       pool = mysql.createPool({
         uri: connUrl,
-        database: 'test',
         ssl: { rejectUnauthorized: false },
         waitForConnections: true,
         connectionLimit: 10,
@@ -55,8 +56,8 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
         });
 
         console.log(`📡 Connected to MySQL server at ${DB_HOST}:${DB_PORT}`);
-        await rootConnection.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
-        console.log(`✅ Database "${DB_NAME}" verified/created.`);
+        await rootConnection.query(`CREATE DATABASE IF NOT EXISTS \`${PROD_DB_NAME}\`;`);
+        console.log(`✅ Database "${PROD_DB_NAME}" verified/created.`);
         await rootConnection.end();
       } catch (err: any) {
         console.warn(`⚠️ Root connection setup skipped/failed (${err.message}). Connecting directly to pool...`);
@@ -68,7 +69,7 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
         port: DB_PORT,
         user: DB_USER,
         password: DB_PASSWORD,
-        database: DB_NAME,
+        database: PROD_DB_NAME,
         ssl: USE_SSL ? { rejectUnauthorized: false } : undefined,
         waitForConnections: true,
         connectionLimit: 10,
@@ -76,15 +77,15 @@ export const initDatabase = async (): Promise<mysql.Pool> => {
       });
     }
 
-    // 3. Ensure connection uses an application database (register_db or test) instead of system db (sys)
+    // 3. Ensure connection uses production application database (seyhagamming_db)
     try {
-      await pool.query('CREATE DATABASE IF NOT EXISTS register_db');
-      await pool.query('USE register_db');
-      console.log('✅ Database context set to "register_db"');
+      await pool.query(`CREATE DATABASE IF NOT EXISTS \`${PROD_DB_NAME}\``);
+      await pool.query(`USE \`${PROD_DB_NAME}\``);
+      console.log(`✅ Production Database context set to "${PROD_DB_NAME}"`);
     } catch (e: any) {
       try {
         await pool.query('USE test');
-        console.log('✅ Database context set to "test"');
+        console.log('✅ Database context fallback set to "test"');
       } catch (err: any) {
         console.warn('⚠️ Could not set database context:', err.message);
       }
